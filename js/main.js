@@ -8,14 +8,14 @@ const refs = {
   modalOverlay: document.querySelector('.lightbox__overlay'),
 };
 
-//Создаем слушателя события на UL 
+//добавляем слушатели события 'click'
 refs.jsGallery.addEventListener('click', clickElementGallery);
 refs.closeModalBtn.addEventListener('click', onCloseModal);
 refs.modalOverlay.addEventListener('click', onOverlayClick);
 refs.modalImage.addEventListener('click', onClickImage);
 
 const createLiElement = () => {
-  const strHTML = galleryItems.reduce((acc, el, index) => {
+  const createGalleryMarkup = galleryItems.reduce((acc, el, index) => {
     acc += `
     <li class="gallery__item">
         <a
@@ -35,7 +35,7 @@ const createLiElement = () => {
     return acc;
   }, '');
 
-  refs.jsGallery.insertAdjacentHTML('afterBegin', strHTML);
+  refs.jsGallery.insertAdjacentHTML('afterBegin', createGalleryMarkup);
 };
 
 createLiElement();
@@ -48,19 +48,18 @@ function setBigImg(src, alt, id) {
 }
 
 function clickElementGallery(event) {
-  //отключаем стандартный обработчик события
   event.preventDefault();
 
-  //отбрасываем все события не на IMG
+  //если не IMG то возврат 
   const smallImg = event.target;
   if (smallImg.nodeName !== 'IMG') {
     return;
   }
 
-  //передаем в модалку большую картинку
+  //добавление в модалку большой картинки
   setBigImg(smallImg.dataset.source, smallImg.alt, smallImg.dataset.id);
 
-  //открываем модалку
+  
   refs.modal.classList.add('is-open');
   window.addEventListener('keydown', onButtonKeyPress);
 }
@@ -75,6 +74,7 @@ function onCloseModal() {
   refs.modal.classList.remove('is-open');
 }
 
+// закрытие картинки при нажатии на оверлее
 function onOverlayClick(event) {
   if (event.currentTarget === event.target) {
     onCloseModal();
